@@ -52,7 +52,16 @@ func GetCompanyById(c *gin.Context) {
 func CreateCompany(c *gin.Context) {
 	// get post data
 	var json models.CompanyJson
-	c.BindJSON(&json)
+	if err := c.BindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"transaction_id": helpers.GenerateUUID(),
+			"success":        false,
+			"message":        "JSON Decoding: " + err.Error(),
+			"result":         []string{},
+		})
+		return
+	}
+
 	company := models.OmsCompany{
 		CompanyCode:      json.Company.CompanyCode,
 		CompanyName:      json.Company.CompanyName,
@@ -87,7 +96,16 @@ func CreateCompany(c *gin.Context) {
 func UpdateCompanyById(c *gin.Context) {
 	// get post data
 	var json models.CompanyJson
-	c.BindJSON(&json)
+	if err := c.BindJSON(&json); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{
+			"transaction_id": helpers.GenerateUUID(),
+			"success":        false,
+			"message":        "JSON Decoding: " + err.Error(),
+			"result":         []string{},
+		})
+		return
+	}
+
 	companyPost := models.OmsCompany{
 		CompanyCode:      json.Company.CompanyCode,
 		CompanyName:      json.Company.CompanyName,
